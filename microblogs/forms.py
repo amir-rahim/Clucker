@@ -1,16 +1,34 @@
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User
+from .models import User, Post
+
+
+class PostForm(forms.Form):
+    post = forms.CharField(label="Post Contents")
+
 
 class LogInForm(forms.Form):
+    class Meta:
+        model = User
+        fields = ['username']
+
     username = forms.CharField(label="Username")
-    password = forms.CharField(label="Password", widget=forms.PasswordInput())
+    password = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(),
+        validators=[RegexValidator(
+            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+            message='Password must contain an uppercase character, a lowercase '
+                    'character and a number'
+        )]
+    )
+
 
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'bio']
-        widgets = { 'bio': forms.Textarea() }
+        widgets = {'bio': forms.Textarea()}
 
     new_password = forms.CharField(
         label='Password',
@@ -18,11 +36,10 @@ class SignUpForm(forms.ModelForm):
         validators=[RegexValidator(
             regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
             message='Password must contain an uppercase character, a lowercase '
-            'character and a number'
-            )]
-        )
+                    'character and a number'
+        )]
+    )
     password_confirmation = forms.CharField(label='Password confirmation', widget=forms.PasswordInput())
-
 
     def clean(self):
         super().clean()
