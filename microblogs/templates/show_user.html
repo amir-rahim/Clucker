@@ -1,0 +1,17 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Clucker</title>
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    </head>
+
+    <body>
+    <h1>User Profile - {{ user.username }}</h1>
+        <p><b>UNDER CONSTRUCTION</b>: This page will be for viewing a User.</p>
+        <p><b>First Name:</b> {{ user.first_name }}</p>
+        <p><b>Last Name:</b> {{ user.last_name }}</p>
+        <p><b>Email:</b> {{ user.email }}</p>
+        <p><b>Bio:</b> {{ user.bio }}</p>
+    </body>
+</html>

@@ -1,0 +1,18 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Clucker</title>
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    </head>
+
+    <body>
+    <h1>User List</h1>
+            <p><b>UNDER CONSTRUCTION</b>: This page will contain a list of users.</p>
+        <ul>
+            {% for users in user_list %}
+                <li><a href='{% url 'show_user' users.id %}'>{{ users.id }}</a> {{ users.username }} - {{ users.first_name }} {{ users.last_name }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

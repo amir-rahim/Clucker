@@ -3,8 +3,24 @@ from django.core.validators import RegexValidator
 from .models import User, Post
 
 
-class PostForm(forms.Form):
-    post = forms.CharField(label="Post Contents")
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'text']
+        exclude = ['author']
+        widgets = {'text': forms.Textarea()}
+
+    def clean(self):
+        super().clean()
+
+    def save(self, user):
+        super().save(commit=False)
+        user = Post.objects.create(
+            title=self.cleaned_data.get('title'),
+            text=self.cleaned_data.get('text'),
+            author=user,
+        )
+        return user
 
 
 class LogInForm(forms.Form):
