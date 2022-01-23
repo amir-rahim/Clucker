@@ -25,15 +25,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Generate Report
-      id: getreport
-      run: |
-        coverage run --source='.' manage.py test
-        echo "::set-output name=report::$(coverage report -m > report.txt)"
+      run: mkdir -p output/
+      run: coverage run --source='.' manage.py test
+      run: echo coverage report -m > output/results.txt
+    - uses: actions/upload-artifact@v1
+        with:
+          name: results
+          path: output
+      - uses: actions/download-artifact@v1
+        with:
+          name: results
     - name: 'Comment on Pull Request'
-      uses: actions/github-script@0.3.0
-      if: github.event_name == 'pull_request'
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: '**Test Coverage:** \n \n ${{ steps.getreport.outputs.report }}' });
+      uses: machine-learning-apps/pr-comment@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: results/results.txt
