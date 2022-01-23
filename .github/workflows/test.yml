@@ -27,7 +27,8 @@ jobs:
     - name: Generate Report
       run: |
         coverage run --source='.' manage.py test
-        echo "REPORT=$(coverage report -m)" >> $GITHUB_ENV
+        export COVERAGE_REPORT=$(coverage report -m)
+        echo "REPORT=$COVERAGE_REPORT" >> $GITHUB_ENV
     - name: 'Comment on Pull Request'
       uses: actions/github-script@0.3.0
       if: github.event_name == 'pull_request'
@@ -36,4 +37,3 @@ jobs:
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
           github.issues.createComment({ issue_number, owner, repo, body: ${{ env.REPORT }} });
-          
