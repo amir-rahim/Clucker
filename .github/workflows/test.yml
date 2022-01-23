@@ -25,7 +25,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Generate Report
-      run: coverage run --source='.' manage.py test
+      id: getreport
+      run: |
+        coverage run --source='.' manage.py test
+        echo "::set-output name=report::echo "$(coverage report -m)""
     - name: 'Comment on Pull Request'
       uses: actions/github-script@0.3.0
       if: github.event_name == 'pull_request'
@@ -33,4 +36,4 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-          github.issues.createComment({ issue_number, owner, repo, body: '**Test Coverage:** \n \n ${{ coverage report -m }}' });
+          github.issues.createComment({ issue_number, owner, repo, body: '**Test Coverage:** \n \n ${{ steps.getreport.outputs.report }}' });
