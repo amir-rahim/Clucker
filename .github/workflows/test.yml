@@ -32,9 +32,9 @@ jobs:
         with:
           name: results
           path: output
-      - uses: actions/download-artifact@v1
-        with:
-          name: results
+    - uses: actions/download-artifact@v1
+      with:
+        name: results
     - name: 'Comment on Pull Request'
       uses: machine-learning-apps/pr-comment@master
         env:
