@@ -28,7 +28,9 @@ jobs:
       run: |
         coverage run --source='.' manage.py test
         export REPORT=$(coverage report -m)
-        echo $REPORT >> $GITHUB_ENV
+        echo "REPORT<<EOF" >> $GITHUB_ENV
+        echo "$REPORT" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
     - name: 'Comment on Pull Request'
       uses: actions/github-script@0.3.0
       if: github.event_name == 'pull_request'
