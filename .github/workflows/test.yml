@@ -28,7 +28,7 @@ jobs:
       id: getreport
       run: |
         coverage run --source='.' manage.py test
-        echo "::set-output name=report::echo "$(coverage report -m)""
+        echo "::set-output name=report::\"$(coverage report -m)\""
     - name: 'Comment on Pull Request'
       uses: actions/github-script@0.3.0
       if: github.event_name == 'pull_request'
